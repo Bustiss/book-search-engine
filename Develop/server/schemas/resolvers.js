@@ -18,7 +18,7 @@ const resolvers = {
                 return User.findOne({ _id: context.user._id });
             }
 
-            throw new AuthenticationError('You need to be logged in!');
+            throw AuthenticationError('You need to be logged in!');
         },
     },
 
@@ -34,13 +34,13 @@ const resolvers = {
             const user = await User.findOne({ email});
 
             if(!user) {
-                throw new AuthenticationError('No user found with this email address');
+                throw AuthenticationError('No user found with this email address');
             }
 
             const correctPw = await user.isCorrectPassword(password);
 
             if(!correctPw) {
-                throw new AuthenticationError('Incorrect Password');
+                throw AuthenticationError('Incorrect Password');
             }
 
             const token = signToken(user);
@@ -56,7 +56,8 @@ const resolvers = {
                 );
             }
             // if no user is found, return an error
-            throw new AuthenticationError('You need to be logged in!');} 
+            throw AuthenticationError('You need to be logged in!');
+            } 
         },
         // remove a book from `savedBooks`
         removeBook: async (parent, {bookId}, context) => {
@@ -68,7 +69,7 @@ const resolvers = {
                 return updatedUser;
             }
             // if no user is found, return an error
-            throw new AuthenticationError('You need to be logged in!');
+            throw AuthenticationError('You need to be logged in!');
         },
     }
 
