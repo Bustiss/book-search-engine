@@ -4,15 +4,6 @@ const { signToken, AuthenticationError } = require('../utils/auth');
 
 const resolvers = {
     Query: {
-        // get all users
-        users: async () => {
-            return User.find().populate('savedBooks');
-        },
-        // get a user by username and populate their savedBooks
-        user: async (parent, { username }) => {
-            return User.findOne({ username }).populate('savedBooks');
-        },
-        // get all books saved by a specific user (person logged in or by username) 
         me: async (parent,args, context) => {
             if(context.user) {
                 return User.findOne({ _id: context.user._id });
@@ -28,6 +19,7 @@ const resolvers = {
 
             return { token, user };
         },
+        
         // login a user, check to see if the user exists, and then verify their identity
         login: async (parent, { email, password}) => {
             const user = await User.findOne({ email});
@@ -58,17 +50,19 @@ const resolvers = {
             throw AuthenticationError('You need to be logged in!');
             } 
         },
+
         // remove a book from `savedBooks`
         removeBook: async (parent, {bookId}, context) => {
             if(context.user) {
-                const updatedUser = await User.findOneAndUpdate(
+            const updatedUser = await User.findOneAndUpdate(
                 { _id: context.user._id },
                 { $pull: { savedBooks: { bookId } } },
-                { new: true });
+                { new: true }
+            );
                 return updatedUser;
             }
             // if no user is found, return an error
-            throw AuthenticationError('You need to be logged in!');
+            throw new AuthenticationError('You need to be logged in!');
         },
     }
 
