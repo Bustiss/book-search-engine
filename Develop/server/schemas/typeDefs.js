@@ -1,4 +1,4 @@
-const typeRefs = `
+const typeDefs = `
 type Query {
     me: User
 }
@@ -30,4 +30,6 @@ type Book {
 type Auth {
     tokern: ID!
     user: User
-}`
+}`;
+
+module.exports = typeDefs
