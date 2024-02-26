@@ -18,6 +18,14 @@ const resolvers = {
   },
 
   Mutation: { 
+    // create a new user
+    addUser: async (parent, args) => {
+      const user = await User.create(args);
+      const token = signToken(user);
+
+      return { token, user };
+    },
+
     // create a user, sign a token, and send it back (to client/src/components/SignUpForm.js)
     login: async (parent, { email, password }) => {
       const user = await User.findOne({ email });
@@ -38,36 +46,33 @@ const resolvers = {
     }
   },
 
-  // create a user, sign a token, and send it back (to client/src/components/SignUpForm.js)
-  addUser: async (parent, args) => {
-    const user = await User.create(args);
-    const token = signToken(user);
-
-    return { token, user };
-  },
-
   // save a book to a user's `savedBooks` field by adding it to the set (to prevent duplicates)
-  saveBook: async (parent, args, context) => {
+  saveBook: async (parent, { bookData }, context ) => {
     if (context.user) {
-      return await User.findByIdAndUpdate(
+      const updatedUser = await User.findByIdAndUpdate(
         { _id: context.user._id },
-        { $addToSet: { savedBooks: args.input }},
+        { $addToSet: { savedBooks: bookData }},
         { new: true }
-      )
+      );
+
+      return updatedUser;
     }
+
+      throw new Error('Authentication error');
   },
 
   // remove a book from `savedBooks`
-  deleteBook: async (parent, args, context ) => {
+  removeBook: async (parent, { bookId }, context) => {
     if (context.user) {
-      return await User.findByIdAndUpdate(
+      const updatedUser = await User.findByIdAndUpdate(
         { _id: context.user._id },
-        { $pull: { savedBooks: { bookId: args.bookId }}},
+        { $pull: { savedBooks: { bookId }}},
         { new: true }
-      )
+      );
+
+      return updatedUser;
     }
+
+      throw new AuthenticationError('You need to be logged in!');
   }
-
 }
-
-module.exports = resolvers;
