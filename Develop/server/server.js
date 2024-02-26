@@ -8,6 +8,10 @@ const { authMiddleware } = require('./utils/auth');
 
 const app = express();
 const PORT = process.env.PORT || 3001;
+const server = new ApolloServer({
+  typeDefs,
+  resolvers,
+});
 
 // Create a new instance of an Apollo server with the GraphQL schema
 const startApolloServer = async () => {

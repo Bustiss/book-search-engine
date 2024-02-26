@@ -5,7 +5,7 @@ const { signToken } = require('../utils/auth');
 const resolvers = {
   Query: {
     // get a single user by either their id or their username
-    user: async (parent, args, context) => {
+    me: async (parent, args, context) => {
       if (context.user) {
         const user = await User.findById(context.user._id).populate('savedBooks');
 
@@ -39,7 +39,7 @@ const resolvers = {
   },
 
   // create a user, sign a token, and send it back (to client/src/components/SignUpForm.js)
-  createUser: async (parent, args) => {
+  addUser: async (parent, args) => {
     const user = await User.create(args);
     const token = signToken(user);
 
@@ -49,9 +49,9 @@ const resolvers = {
   // save a book to a user's `savedBooks` field by adding it to the set (to prevent duplicates)
   saveBook: async (parent, args, context) => {
     if (context.user) {
-      const updateUser = await User.findByIdAndUpdate(
-        { _id: user._id },
-        { $addToSet: { savedBooks: bookId: params.bookId }},
+      return await User.findByIdAndUpdate(
+        { _id: context.user._id },
+        { $addToSet: { savedBooks: args.input }},
         { new: true }
       )
     }
@@ -60,7 +60,7 @@ const resolvers = {
   // remove a book from `savedBooks`
   deleteBook: async (parent, args, context ) => {
     if (context.user) {
-      const updateUser = await User.findByIdAndUpdate(
+      return await User.findByIdAndUpdate(
         { _id: context.user._id },
         { $pull: { savedBooks: { bookId: args.bookId }}},
         { new: true }
