@@ -5,7 +5,8 @@ AS AN avid reader
 I WANT to search for new books to read
 SO THAT I can keep a list of books to purchase
 
-![Alt text](https://file%252B.vscode-resource.vscode-cdn.net/Users/livealil/Pictures/Photos%2520Library.photoslibrary/originals/9/907C1E5F-9387-4943-8055-8DE46C60F281.jpeg?version%253D1709087989602)
+![907C1E5F-9387-4943-8055-8DE46C60F281](https://github.com/Liiv-Dev/book-search-engine/assets/90412259/744b7108-9a5a-4df9-847e-8eba2a7259c2)
+
 
 ## Link(s)
 
